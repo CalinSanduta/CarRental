@@ -10,14 +10,14 @@
     <body>
         <div id="global">
             <header>
-                <a href="index.php"><h1 id="titreBlog">Le Blogue du prof v0.2.0.1</h1></a>
-                <p>Je vous souhaite la bienvenue sur ce modeste blog.</p>
+                <a href="index.php"><h1 id="titreBlog">CarRental</h1></a>
+                <p>Louez la voiture de vos rêves. Simple et efficace !</p>
             </header>
             <div id="contenu">
                 <?= $contenu ?>   <!-- Élément spécifique -->
             </div> <!-- #contenu -->
             <footer id="piedBlog">
-                Blog réalisé avec PHP, HTML5 et CSS.
+                Blog réalisé par Calin, Badr et Dylan.
             </footer>
         </div> <!-- #global -->
     </body>
