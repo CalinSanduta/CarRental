@@ -7,41 +7,43 @@
    Pour pouvoir utiliser un "min-height: 100%" sur div#global, il nous faut:
    - un parent (body) en "height: 100%";
    - le parent de body également en "height: 100%". */
-html, body {
-    height: 100%;
+html,
+body {
+  height: 100%;
 }
 
 body {
-    color: #bfbfbf;
-    background: black;
-    font-family: 'Futura-Medium', 'Futura', 'Trebuchet MS', sans-serif;
+  color: #bfbfbf;
+  background: black;
+  font-family: "Futura-Medium", "Futura", "Trebuchet MS", sans-serif;
 }
 
 h1 {
-    color: white;
+  color: white;
 }
 
 .titreArticle {
-    margin-bottom : 0px;
+  margin-bottom: 0px;
 }
 
 #global {
-    min-height: 100%;  /* Voir commentaire sur html et body plus haut */
-    background: #333534;
-    width: 70%;
-    margin: auto;	/* Permet de centrer la div */
-    text-align: justify;
-    padding: 5px 20px;
+  min-height: 100%; /* Voir commentaire sur html et body plus haut */
+  background: #333534;
+  width: 70%;
+  margin: auto; /* Permet de centrer la div */
+  text-align: justify;
+  padding: 5px 20px;
 }
 
 #contenu {
-    margin-bottom : 30px;
+  margin-bottom: 30px;
 }
 
-#titreBlog, #piedBlog {
-    text-align: center;
+#titreBlog,
+#piedBlog {
+  text-align: center;
 }
 
 #titreReponses {
-    font-size : 100%;
+  font-size: 100%;
 }
