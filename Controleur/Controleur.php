@@ -2,44 +2,42 @@
 
 require 'Modele/Modele.php';
 
-// Affiche la liste de tous les Articles du blog
+// Affiche la liste de toutes les Voitures
 function accueil() {
-    $Articles = getArticles();
+    $Voitures = getVoitures();
     require 'Vue/vueAccueil.php';
 }
 
-// Affiche les détails sur un Article
-function Article($id, $erreur) {
-    $Article = getArticle($id);
-    $commentaires = getCommentaires($id);
-    require 'Vue/vueArticle.php';
+// Affiche les détails sur une Voiture
+function Voiture($id, $erreur) {
+    $Voiture = getVoiture($id);
+    $avis = getAvis($id);
+    require 'Vue/vueVoiture.php';
 }
 
-// Ajoute un commentaire à un Article
-function commentaire($commentaire) {
-    
-        // Ajouter le commentaire à l'aide du modèle
-        setCommentaire($commentaire);
-        //Recharger la page pour mettre à jour la liste des commentaires associés
-        header('Location: index.php?action=Article&id=' . $commentaire['Article_id']);
-    
+// Ajoute un avis à une Voiture
+function avis($avis) {
+    // Ajouter l'avis à l'aide du modèle
+    setAvis($avis);
+    //Recharger la page pour mettre à jour la liste des avis associés
+    header('Location: index.php?action=Voiture&id=' . $avis['Voiture_id']);
 }
 
-// Confirmer la suppression d'un commentaire
+// Confirmer la suppression d'un avis
 function confirmer($id) {
-    // Lire le commentaire à l'aide du modèle
-    $commentaire = getCommentaire($id);
+    // Lire l'avis à l'aide du modèle
+    $avis = getUnAvis($id);
     require 'Vue/vueConfirmer.php';
 }
 
-// Supprimer un commentaire
+// Supprimer un avis
 function supprimer($id) {
-    // Lire le commentaire afin d'obtenir le id de l'Article associé
-    $commentaire = getCommentaire($id);
-    // Supprimer le commentaire à l'aide du modèle
-    deleteCommentaire($id);
-    //Recharger la page pour mettre à jour la liste des commentaires associés
-    header('Location: index.php?action=Article&id=' . $commentaire['Article_id']);
+    // Lire l'avis afin d'obtenir le id de la Voiture associée
+    $avis = getUnAvis($id);
+    // Supprimer l'avis à l'aide du modèle
+    deleteAvis($id);
+    //Recharger la page pour mettre à jour la liste des avis associés
+    header('Location: index.php?action=Voiture&id=' . $avis['Voiture_id']);
 }
 
 // Affiche une erreur
