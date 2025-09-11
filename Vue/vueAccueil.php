@@ -1,19 +1,18 @@
-<?php $titre = 'Le Blogue du prof'; ?>
+<?php $titre = 'Location de voitures'; ?>
 
 <?php ob_start(); ?>
-<?php foreach ($Articles as $Article):
-    ?>
-    <Article>
+<?php foreach ($Voitures as $Voiture): ?>
+    <Voiture>
         <header>
-            <a href="<?= "index.php?action=Article&id=" . $Article['id'] ?>">
-                <h3 class="titreArticle"><?= $Article['titre'] ?><br/>
+            <a href="<?= "index.php?action=Voiture&id=" . $Voiture['id'] ?>">
+                <h3 class="titreVoiture"><?= $Voiture['titre'] ?><br/>
             </a>
-            <small><?= $Article['sous_titre'] ?></small></h3>
+            <small><?= $Voiture['sous_titre'] ?></small></h3>
         </header>
-        <time><?= $Article['date'] ?></time>, 
-        par utilisateur #<?= $Article['utilisateur_id'] ?>, 
-        <?= $Article['type'] ?>
-    </Article>
+        <time><?= $Voiture['date'] ?></time>, 
+        par utilisateur #<?= $Voiture['utilisateur_id'] ?>, 
+        <?= $Voiture['type'] ?>
+    </Voiture>
     <hr />
 <?php endforeach; ?>    
 <?php $contenu = ob_get_clean(); ?>
