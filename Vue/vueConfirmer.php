@@ -1,27 +1,26 @@
-<?php $titre = "Supprimer - " . $commentaire['titre']; ?>
+<?php $titre = "Supprimer - " . $avis['titre']; ?>
 <?php ob_start(); ?>
-<Article>
+<Voiture>
     <header>
         <p><h1>
-            Supprimer?
+            Supprimer cet avis ?
         </h1>
-        <?= $commentaire['date'] ?>, <?= $commentaire['auteur'] ?> dit : (privé? <?= $commentaire['prive'] ?>)<br/>
-        <strong><?= $commentaire['titre'] ?></strong><br/>
-        <?= $commentaire['texte'] ?>
+        <?= $avis['date'] ?>, <?= $avis['auteur'] ?> dit : (privé? <?= $avis['prive'] ?>)<br/>
+        <strong><?= $avis['titre'] ?></strong><br/>
+        <?= $avis['texte'] ?>
         </p>
     </header>
-</Article>
+</Voiture>
 
 <form action="index.php?action=supprimer" method="post">
-    <input type="hidden" name="id" value="<?= $commentaire['id'] ?>" /><br />
+    <input type="hidden" name="id" value="<?= $avis['id'] ?>" /><br />
     <input type="submit" value="Oui" />
 </form>
 <form action="index.php" method="get" >
-    <input type="hidden" name="action" value="Article" />
-    <input type="hidden" name="id" value="<?= $commentaire['Article_id'] ?>" />
+    <input type="hidden" name="action" value="Voiture" />
+    <input type="hidden" name="id" value="<?= $avis['Voiture_id'] ?>" />
     <input type="submit" value="Annuler" />
 </form>
 <?php $contenu = ob_get_clean(); ?>
 
 <?php require 'Vue/gabarit.php'; ?>
-
