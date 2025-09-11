@@ -3,65 +3,67 @@
 // Effectue la connexion à la BDD
 // Instancie et renvoie l'objet PDO associé
 function getBdd() {
-    $bdd = new PDO('mysql:host=localhost;dbname=blogue_v0_2_1;charset=utf8', 'root', 'mysql', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+    $bdd = new PDO('mysql:host=localhost;dbname=locationvoitures;charset=utf8', 'root', 'mysql', array(PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
     return $bdd;
 }
 
-// Renvoie la liste de tous les Articles, triés par identifiant décroissant
-function getArticles() {
+// Renvoie la liste de toutes les Voitures, triées par identifiant décroissant
+function getVoitures() {
     $bdd = getBdd();
-    $Articles = $bdd->query('select * from Articles'
+    $Voitures = $bdd->query('select * from Voitures'
             . ' order by ID desc');
-    return $Articles;
+    return $Voitures;
 }
 
-// Renvoie les informations sur un Article
-function getArticle($idArticle) {
+// Renvoie les informations sur une Voiture
+function getVoiture($idVoiture) {
     $bdd = getBdd();
-    $Article = $bdd->prepare('select * from Articles'
+    $Voiture = $bdd->prepare('select * from Voitures'
             . ' where ID=?');
-    $Article->execute(array($idArticle));
-    if ($Article->rowCount() == 1)
-        return $Article->fetch();  // Accès à la première ligne de résultat
+    $Voiture->execute(array($idVoiture));
+    if ($Voiture->rowCount() == 1)
+        return $Voiture->fetch();  // Accès à la première ligne de résultat
     else
-        throw new Exception("Aucun Article ne correspond à l'identifiant '$idArticle'");
+        throw new Exception("Aucune Voiture ne correspond à l'identifiant '$idVoiture'");
 }
 
-// Renvoie la liste des commentaires associés à un Article
-function getCommentaires($idArticle) {
+// Renvoie la liste des avis associés à une Voiture
+function getAvis($idVoiture) {
     $bdd = getBdd();
-    $commentaires = $bdd->prepare('select * from Commentaires'
-            . ' where Article_id = ?');
-    $commentaires->execute(array($idArticle));
-    return $commentaires;
+    $avis = $bdd->prepare('select * from Avis'
+            . ' where Voiture_id = ?');
+    $avis->execute(array($idVoiture));
+    return $avis;
 }
 
-// Renvoie un commentaire spécifique
-function getCommentaire($id) {
+// Renvoie un avis spécifique
+function getUnAvis($id) {
     $bdd = getBdd();
-    $commentaire = $bdd->prepare('select * from Commentaires'
+    $avis = $bdd->prepare('select * from Avis'
             . ' where id = ?');
-    $commentaire->execute(array($id));
-    if ($commentaire->rowCount() == 1)
-        return $commentaire->fetch();  // Accès à la première ligne de résultat
+    $avis->execute(array($id));
+    if ($avis->rowCount() == 1)
+        return $avis->fetch();  // Accès à la première ligne de résultat
     else
-        throw new Exception("Aucun commentaire ne correspond à l'identifiant '$id'");
-    return $commentaire;
+        throw new Exception("Aucun avis ne correspond à l'identifiant '$id'");
+    return $avis;
 }
 
-// Ajoute un commentaire associés à un Article
-function setCommentaire($commentaire) {
+// Ajoute un avis associé à une Voiture
+function setAvis($avis) {
     $bdd = getBdd();
-    $commentaires = $bdd->prepare('INSERT INTO commentaires (Article_id, date, auteur, titre, texte, prive) VALUES(?, NOW(), ?, ?, ?, ?)');
-    $commentaires->execute(array($commentaire['Article_id'], $commentaire['auteur'], $commentaire['titre'], $commentaire['texte'], $commentaire['prive']));
-    return $commentaires;
+    $stmt = $bdd->prepare('INSERT INTO Avis (Voiture_id, date, auteur, titre, texte, prive) VALUES(?, NOW(), ?, ?, ?, ?)');
+    $stmt->execute(array($avis['Voiture_id'], $avis['auteur'], $avis['titre'], $avis['texte'], $avis['prive']));
+    return $stmt;
 }
 
-// Supprime un commentaire
-function deleteCommentaire($id) {
+// Supprime un avis
+function deleteAvis($id) {
     $bdd = getBdd();
-    $result = $bdd->prepare('DELETE FROM Commentaires'
+    $result = $bdd->prepare('DELETE FROM Avis'
             . ' WHERE id = ?');
     $result->execute(array($id));
     return $result;
 }
+
+?>

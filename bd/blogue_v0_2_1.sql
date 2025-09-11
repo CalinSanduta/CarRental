@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le :  mar. 16 fév. 2021 à 22:26
+-- Généré le :  mar. 09 sep. 2025 à 14:52
 -- Version du serveur :  8.0.18
 -- Version de PHP :  7.3.11
 
@@ -19,58 +19,22 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Base de données :  `blogue_v0_2_1`
+-- Base de données :  `locationvoitures`
 --
 
 -- --------------------------------------------------------
 
 --
--- Structure de la table `Articles`
+-- Structure de la table `avis`
 --
 
-CREATE TABLE `Articles` (
+CREATE TABLE `avis` (
   `id` int(11) NOT NULL,
-  `titre` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `sous_titre` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `voiture_id` int(11) NOT NULL,
   `utilisateur_id` int(11) NOT NULL,
   `date` date NOT NULL,
-  `texte` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `type` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `Articles`
---
-
-INSERT INTO `Articles` (`id`, `titre`, `sous_titre`, `utilisateur_id`, `date`, `texte`, `type`) VALUES
-(1, 'Mon premier Article', 'Mon premier sous-titre', 1, '2021-02-09', 'Le texte de Mon premier Article', 'général');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `commentaires`
---
-
-CREATE TABLE `commentaires` (
-  `id` int(11) NOT NULL,
-  `Article_id` int(11) NOT NULL,
-  `date` date NOT NULL,
-  `auteur` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `titre` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `texte` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `prive` tinyint(1) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Déchargement des données de la table `commentaires`
---
-
-INSERT INTO `commentaires` (`id`, `Article_id`, `date`, `auteur`, `titre`, `texte`, `prive`) VALUES
-(1, 1, '2021-02-09', 'moi', 'Bravo', 'Pour ton premier Article', 0),
-(2, 1, '2021-02-09', 'Toi', 'Bravo aussi ', 'Pour ton deuxième Article', 1),
-(3, 1, '2021-02-09', 'lui', 'Félicitations', 'à lui aussi', 0),
-(4, 1, '2021-02-16', 'nous mod', 'Notre commentaire', 'Texte de notre commentaire mod', 0),
-(5, 1, '2021-02-16', 'Vous', 'Votre commentaire', 'Texte de votre commentaire', 0);
+  `commentaire` text COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -80,35 +44,36 @@ INSERT INTO `commentaires` (`id`, `Article_id`, `date`, `auteur`, `titre`, `text
 
 CREATE TABLE `utilisateurs` (
   `id` int(11) NOT NULL,
-  `nom` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `identifiant` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `mot_de_passe` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `prenom` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `email` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `mot_de_passe` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
 
 --
--- Déchargement des données de la table `utilisateurs`
+-- Structure de la table `voitures`
 --
 
-INSERT INTO `utilisateurs` (`id`, `nom`, `identifiant`, `mot_de_passe`) VALUES
-(1, 'André Pilon', 'apilon', 'secret');
+CREATE TABLE `voitures` (
+  `modele` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `annee` year(4) NOT NULL,
+  `description` text COLLATE utf8mb4_general_ci NOT NULL,
+  `prix_jour` float NOT NULL,
+  `id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Index pour les tables déchargées
 --
 
 --
--- Index pour la table `Articles`
+-- Index pour la table `avis`
 --
-ALTER TABLE `Articles`
+ALTER TABLE `avis`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `utilisateur_id` (`utilisateur_id`);
-
---
--- Index pour la table `commentaires`
---
-ALTER TABLE `commentaires`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `Article_id` (`Article_id`);
+  ADD KEY `fk_avis_client` (`utilisateur_id`),
+  ADD KEY `fk_avis_voiture` (`voiture_id`);
 
 --
 -- Index pour la table `utilisateurs`
@@ -117,42 +82,43 @@ ALTER TABLE `utilisateurs`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Index pour la table `voitures`
+--
+ALTER TABLE `voitures`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- AUTO_INCREMENT pour les tables déchargées
 --
 
 --
--- AUTO_INCREMENT pour la table `Articles`
+-- AUTO_INCREMENT pour la table `avis`
 --
-ALTER TABLE `Articles`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT pour la table `commentaires`
---
-ALTER TABLE `commentaires`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+ALTER TABLE `avis`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT pour la table `utilisateurs`
 --
 ALTER TABLE `utilisateurs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT pour la table `voitures`
+--
+ALTER TABLE `voitures`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Contraintes pour les tables déchargées
 --
 
 --
--- Contraintes pour la table `Articles`
+-- Contraintes pour la table `avis`
 --
-ALTER TABLE `Articles`
-  ADD CONSTRAINT `Articles_ibfk_1` FOREIGN KEY (`utilisateur_id`) REFERENCES `utilisateurs` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Contraintes pour la table `commentaires`
---
-ALTER TABLE `commentaires`
-  ADD CONSTRAINT `commentaires_ibfk_1` FOREIGN KEY (`Article_id`) REFERENCES `Articles` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
+ALTER TABLE `avis`
+  ADD CONSTRAINT `fk_avis_client` FOREIGN KEY (`utilisateur_id`) REFERENCES `utilisateurs` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
+  ADD CONSTRAINT `fk_avis_voiture` FOREIGN KEY (`voiture_id`) REFERENCES `voitures` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
