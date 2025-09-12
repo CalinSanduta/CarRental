@@ -5,13 +5,11 @@
     <Voiture>
         <header>
             <a href="<?= "index.php?action=Voiture&id=" . $Voiture['id'] ?>">
-                <h3 class="titreVoiture"><?= $Voiture['titre'] ?><br/>
+                <h3 class="titreVoiture"><?= $Voiture['modele'] ?> (<?= $Voiture['annee'] ?>)<br/>
             </a>
-            <small><?= $Voiture['sous_titre'] ?></small></h3>
+            <small><?= $Voiture['description'] ?></small></h3>
         </header>
-        <time><?= $Voiture['date'] ?></time>, 
-        par utilisateur #<?= $Voiture['utilisateur_id'] ?>, 
-        <?= $Voiture['type'] ?>
+        <p>Prix par jour : <?= $Voiture['prix_jour'] ?> $</p>
     </Voiture>
     <hr />
 <?php endforeach; ?>    
