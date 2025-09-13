@@ -5,37 +5,37 @@ require 'Controleur/Controleur.php';
 try {
     if (isset($_GET['action'])) {
 
-        // Afficher un Article
-        if ($_GET['action'] == 'Article') {
+        // Afficher un Voiture
+        if ($_GET['action'] == 'Voiture') {
             if (isset($_GET['id'])) {
                 // intval renvoie la valeur numérique du paramètre ou 0 en cas d'échec
                 $id = intval($_GET['id']);
                 if ($id != 0) {
                     $erreur = isset($_GET['erreur']) ? $_GET['erreur'] : '';
-                    Article($id, $erreur);
+                    Voiture($id, $erreur);
                 } else
-                    throw new Exception("Identifiant d'Article incorrect");
+                    throw new Exception("Identifiant de Voiture incorrect");
             } else
-                throw new Exception("Aucun identifiant d'Article");
+                throw new Exception("Aucun identifiant de Voiture");
 
-            // Ajouter un commentaire
-        } else if ($_GET['action'] == 'commentaire') {
-            if (isset($_POST['Article_id'])) {
+            // Ajouter un avis
+        } else if ($_GET['action'] == 'avis') {
+            if (isset($_POST['Voiture_id'])) {
                 // intval renvoie la valeur numérique du paramètre ou 0 en cas d'échec
-                $id = intval($_POST['Article_id']);
+                $id = intval($_POST['Voiture_id']);
                 if ($id != 0) {
-                    // vérifier si l'Article existe;
-                    $Article = getArticle($id);
+                    // vérifier si la Voiture existe;
+                    $Voiture = getVoiture($id);
                     // Récupérer les données du formulaire
-                    $commentaire = $_POST;
+                    $avis = $_POST;
                     // Ajuster la valeur de la case à cocher
-                    $commentaire['prive'] = (isset($_POST['prive'])) ? 1 : 0;
-                    //Réaliser l'action commentaire du contrôleur
-                    commentaire($commentaire);
+                    $avis['prive'] = (isset($_POST['prive'])) ? 1 : 0;
+                    //Réaliser l'action avis du contrôleur
+                    avis($avis);
                 } else
-                    throw new Exception("Identifiant d'Article incorrect");
+                    throw new Exception("Identifiant de Voiture incorrect");
             } else
-                throw new Exception("Aucun identifiant d'Article");
+                throw new Exception("Aucun identifiant de Voiture");
 
             // Confirmer la suppression
         } else if ($_GET['action'] == 'confirmer') {
@@ -45,11 +45,11 @@ try {
                 if ($id != 0) {
                     confirmer($id);
                 } else
-                    throw new Exception("Identifiant de commentaire incorrect");
+                    throw new Exception("Identifiant d'avis incorrect");
             } else
-                throw new Exception("Aucun identifiant de commentaire");
+                throw new Exception("Aucun identifiant d'avis");
 
-            // Supprimer un commentaire
+            // Supprimer un avis
         } else if ($_GET['action'] == 'supprimer') {
             if (isset($_POST['id'])) {
                 // intval renvoie la valeur numérique du paramètre ou 0 en cas d'échec
@@ -57,9 +57,9 @@ try {
                 if ($id != 0) {
                     supprimer($id);
                 } else
-                    throw new Exception("Identifiant de commentaire incorrect");
+                    throw new Exception("Identifiant d'avis incorrect");
             } else
-                throw new Exception("Aucun identifiant de commentaire");
+                throw new Exception("Aucun identifiant d'avis");
         } else {
             // Action mal définie
             throw new Exception("Action non valide");
