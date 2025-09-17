@@ -1,22 +1,22 @@
 <?php
 
 require_once 'Controleur/ControleurVoiture.php';
-/* require_once 'Controleur/ControleurAvis.php';
-require_once 'Controleur/ControleurType.php'; */
+require_once 'Controleur/ControleurAvis.php'; 
+// require_once 'Controleur/ControleurType.php';
 require_once 'Vue/Vue.php';
 
 class Routeur {
 
     private $ctrlVoiture;
     private $ctrlAvis;
-    private $ctrlType;
+    // private $ctrlType;
 
     public function __construct() {
         $this->ctrlVoiture = new ControleurVoiture();
-      /*   $this->ctrlAvis = new ControleurAvis();
-        $this->ctrlType = new ControleurType(); */
+        $this->ctrlAvis = new ControleurAvis(); 
+        // $this->ctrlType = new ControleurType();
     }
-
+    
     // Route une requête entrante : exécution l'action associée
     public function routerRequete() {
         try {
@@ -27,7 +27,6 @@ class Routeur {
                 } else if ($_GET['action'] == 'voiture') {
                     $id = intval($this->getParametre($_GET, 'id'));
                     if ($id != 0) {
-                        // Vérifier si une erreur est présente
                         $erreur = isset($_GET['erreur']) ? $_GET['erreur'] : '';
                         $this->ctrlVoiture->voiture($id, $erreur);
                     } else
@@ -36,11 +35,8 @@ class Routeur {
                     // Tester l'existence des paramètres requis
                     $voiture_id = intval($this->getParametre($_POST, 'voiture_id'));
                     if ($voiture_id != 0) {
-                        $this->getParametre($_POST, 'auteur');
-                        $this->getParametre($_POST, 'titre');
-                        $this->getParametre($_POST, 'texte');
-                        $this->getParametre($_POST, 'prive');
-                        // Enregistrer le avis
+                        $this->getParametre($_POST, 'utilisateur_id');
+                        $this->getParametre($_POST, 'commentaire');
                         $this->ctrlAvis->avis($_POST);
                     } else
                         throw new Exception("Identifiant d'une voiture non valide");
@@ -59,32 +55,20 @@ class Routeur {
                 } else if ($_GET['action'] == 'nouvelVoiture') {
                     $this->ctrlVoiture->nouvelVoiture();
                 } else if ($_GET['action'] == 'ajouter') {
-                    // Tester l'existence des paramètres requis
-                    $utilisateur_id = intval($this->getParametre($_POST, 'utilisateur_id'));
-                    if ($utilisateur_id != 0) {
-                        $this->getParametre($_POST, 'titre');
-                        $this->getParametre($_POST, 'sous_titre');
-                        $this->getParametre($_POST, 'texte');
-                        $this->getParametre($_POST, 'type');
-                        // Enregistrer la voiture
-                        $this->ctrlVoiture->ajouter($_POST);
-                    } else
-                        throw new Exception("Identifiant d'utilisateur non valide");
+                    $this->getParametre($_POST, 'modele');
+                    $this->getParametre($_POST, 'annee');
+                    $this->getParametre($_POST, 'description');
+                    $this->getParametre($_POST, 'prix_jour');
+                    $this->ctrlVoiture->ajouter($_POST);
+
                 } else if ($_GET['action'] == 'miseAJourVoiture') {
-                    // Tester l'existence des paramètres requis
                     $id = intval($this->getParametre($_POST, 'id'));
                     if ($id != 0) {
-                        $utilisateur_id = intval($this->getParametre($_POST, 'utilisateur_id'));
-                        if ($utilisateur_id != 0) {
-                            //Vérifier l'existence des paramètres
-                            $this->getParametre($_POST, 'titre');
-                            $this->getParametre($_POST, 'sous_titre');
-                            $this->getParametre($_POST, 'texte');
-                            $this->getParametre($_POST, 'type');
-                            // Enregistrer la voiture
-                            $this->ctrlVoiture->miseAJourVoiture($_POST);
-                        } else
-                            throw new Exception("Identifiant d'utilisateur non valide");
+                        $this->getParametre($_POST, 'modele');
+                        $this->getParametre($_POST, 'annee');
+                        $this->getParametre($_POST, 'description');
+                        $this->getParametre($_POST, 'prix_jour');
+                        $this->ctrlVoiture->miseAJourVoiture($_POST);
                     } else
                         throw new Exception("Identifiant de voiture non valide");
                 } else if ($_GET['action'] == 'modifierVoiture') {
@@ -93,14 +77,13 @@ class Routeur {
                         $this->ctrlVoiture->modifierVoiture($id);
                     } else
                         throw new Exception("Identifiant de voiture non valide");
-                } else if ($_GET['action'] == 'quelsTypes') {
-                    $term = $this->getParametre($_GET, 'term');
-                    $this->ctrlType->quelsTypes($term);
+
                 } else {
                     throw new Exception("Action non valide");
                 }
-            } else // aucune action définie : affichage des voitures par défaut
+            } else {
                 $this->ctrlVoiture->voitures();
+            }
         } catch (Exception $e) {
             $this->erreur($e->getMessage());
         }
