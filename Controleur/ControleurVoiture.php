@@ -2,7 +2,7 @@
 
 require_once 'Modele/Voiture.php';
 require_once 'Modele/Avis.php';
-require_once 'Vue/Vue.php';
+require_once 'Framework/Vue.php';
 
 class ControleurVoiture {
 
