@@ -4,6 +4,7 @@ require_once 'Controleur/ControleurVoiture.php';
 require_once 'Controleur/ControleurAvis.php'; 
 // require_once 'Controleur/ControleurType.php';
 require_once 'Framework/Vue.php';
+require_once 'Framework/Requete.php';
 
 class Routeur {
 
@@ -14,6 +15,14 @@ class Routeur {
     public function __construct() {
         $this->ctrlVoiture = new ControleurVoiture();
         $this->ctrlAvis = new ControleurAvis(); 
+        // Créer la requête et l'affecter aux contrôleurs qui en ont besoin
+        $requete = new Requete(array_merge($_GET, $_POST));
+        if (method_exists($this->ctrlVoiture, 'setRequete')) {
+            $this->ctrlVoiture->setRequete($requete);
+        }
+        if (method_exists($this->ctrlAvis, 'setRequete')) {
+            $this->ctrlAvis->setRequete($requete);
+        }
         // $this->ctrlType = new ControleurType();
     }
     

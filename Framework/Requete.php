@@ -1,6 +1,6 @@
 <?php
-require_once 'Configuration.php';
-require_once 'Session.php';
+require_once __DIR__ . '/Configuration.php';
+require_once __DIR__ . '/Session.php';
 
 /**
  * Classe modélisant une requête HTTP entrante.

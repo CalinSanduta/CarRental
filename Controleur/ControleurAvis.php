@@ -1,9 +1,10 @@
 <?php
 
+require_once 'Framework/Controleur.php';
 require_once 'Modele/Avis.php';
 require_once 'Framework/Vue.php';
 
-class ControleurAvis {
+class ControleurAvis extends Controleur {
 
     private $avis;
 
@@ -12,8 +13,9 @@ class ControleurAvis {
     }
 
     public function index() {
-        $avis = $this->avis->getAvisAll();
-        // La génération de la vue pour lister les avis n'est pas utilisée actuellement
+        // Redirection vers la page d'accueil (liste des voitures)
+        header('Location: index.php');
+        exit;
     }
 
     // Ajoute un avis à une voiture

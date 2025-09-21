@@ -1,10 +1,10 @@
 <?php
 
+require_once 'Framework/Controleur.php';
 require_once 'Modele/Voiture.php';
 require_once 'Modele/Avis.php';
-require_once 'Framework/Vue.php';
 
-class ControleurVoiture {
+class ControleurVoiture extends Controleur {
 
     private $voiture;
     private $avis;
@@ -12,6 +12,11 @@ class ControleurVoiture {
     public function __construct() {
         $this->voiture = new Voiture();
         $this->avis = new Avis();
+    }
+
+    // Action par défaut requise par la classe Controleur
+    public function index() {
+        $this->voitures();
     }
 
     // Affiche la liste de toutes les voitures
@@ -26,7 +31,6 @@ class ControleurVoiture {
     public function voiture($idVoiture, $erreur) {
         // CHANGÉ : getVoiture() renvoie déjà une ligne (fetch()), donc pas de fetchAll ici
         $voiture = $this->voiture->getVoiture($idVoiture);
-        // CHANGÉ : la liste des avis, oui → fetchAll
         $avis = $this->avis->getAvis($idVoiture)->fetchAll(PDO::FETCH_ASSOC);
         $vue = new Vue("Voiture");
         $vue->generer(['voiture' => $voiture, 'avis' => $avis, 'erreur' => $erreur]);
