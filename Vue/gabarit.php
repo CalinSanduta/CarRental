@@ -12,6 +12,9 @@
             <header>
                 <a href="index.php"><h1 id="titreBlog">CarRental</h1></a>
                 <p>Louez la voiture de vos rêves. Simple et efficace !</p>
+                <nav>
+                    <a href="index.php?action=apropos"><h4>À propos</h4></a>
+                </nav>
             </header>
             <div id="contenu">
                 <?= $contenu ?>   <!-- Élément spécifique -->

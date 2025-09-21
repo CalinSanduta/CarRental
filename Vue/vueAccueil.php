@@ -1,10 +1,10 @@
-<?php $titre = 'Location de voitures'; ?>
+<?php $this->titre = 'Location de voitures'; ?>
 
 <?php ob_start(); ?>
 <?php foreach ($Voitures as $Voiture): ?>
     <Voiture>
         <header>
-            <a href="<?= "index.php?action=Voiture&id=" . $Voiture['id'] ?>">
+            <a href="<?= "voiture/index/" . $Voiture['id'] ?>">
                 <h3 class="titreVoiture"><?= $Voiture['modele'] ?> (<?= $Voiture['annee'] ?>)<br/>
             </a>
             <small><?= $Voiture['description'] ?></small></h3>

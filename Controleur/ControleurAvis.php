@@ -11,38 +11,48 @@ class ControleurAvis {
         $this->avis = new Avis();
     }
 
-// Ajoute un avis à un voiture
-    public function avis($avis) {
-        $validation_courriel = filter_var($avis['auteur'], FILTER_VALIDATE_EMAIL);
-        if ($validation_courriel) {
-            $_SESSION['h204a4message'] = "Ajouter un avis n'est pas permis en démonstration";
-            // Ajouter le avis à l'aide du modèle
-            $this->avis->setAvis($avis);
-            //Recharger la page pour mettre à jour la liste des avis associés
-            header('Location: index.php?action=voiture&id=' . $avis['voiture_id']);
+    public function index() {
+        $avis = $this->avis->getAvisAll();
+        // La génération de la vue pour lister les avis n'est pas utilisée actuellement
+    }
+
+    // Ajoute un avis à une voiture
+    public function avis($donnees) {
+        // Valider les champs réellement envoyés par le formulaire
+        if (!empty($donnees['voiture_id']) && !empty($donnees['utilisateur_id']) && trim($donnees['commentaire']) !== '') {
+            try {
+                $this->avis->setAvis($donnees);
+                header('Location: index.php?action=voiture&id=' . intval($donnees['voiture_id']));
+                exit;
+            } catch (Exception $e) {
+                // Rediriger vers la page voiture avec une erreur lisible
+                $msg = urlencode($e->getMessage());
+                header('Location: index.php?action=voiture&id=' . intval($donnees['voiture_id']) . '&erreur=' . $msg);
+                exit;
+            }
         } else {
-            //Recharger la page avec une erreur près du courriel
-            header('Location: index.php?action=voiture&id=' . $avis['voiture_id'] . '&erreur=courriel');
+            header('Location: index.php?action=voiture&id=' . intval($donnees['voiture_id'] ?? 0) . '&erreur=champs');
+            exit;
         }
     }
 
-// Confirmer la suppression d'un avis
+    // Confirmer la suppression d'un avis
     public function confirmer($id) {
-        // Lire le avis à l'aide du modèle
-        $avis = $this->avis->getAvis($id);
+        // Lire l'avis à l'aide du modèle (un seul enregistrement)
+        $avis = $this->avis->getUnAvis($id);
         $vue = new Vue("Confirmer");
         $vue->generer(array('avis' => $avis));
     }
 
-// Supprimer un avis
+    // Supprimer un avis
     public function supprimer($id) {
-        // Lire le avis afin d'obtenir le id de la voiture associé
-        $avis = $this->avis->getAvis($id);
-        $_SESSION['h204a4message'] = "Supprimer un avis n'est pas permis en démonstration";
+        // Lire l'avis afin d'obtenir le id de la voiture associé
+        $avis = $this->avis->getUnAvis($id);
         // Supprimer le avis à l'aide du modèle
         $this->avis->deleteAvis($id);
-        //Recharger la page pour mettre à jour la liste des avis associés
-        header('Location: index.php?action=voiture&id=' . $avis['voiture_id']);
+        // Recharger la page pour mettre à jour la liste des avis associés
+        header('Location: index.php?action=voiture&id=' . intval($avis['voiture_id']));
+        exit;
     }
 
 }

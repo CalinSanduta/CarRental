@@ -1,4 +1,4 @@
-<?php $titre = "CarRental - Ajouter une voiture" . $voiture['titre']; ?>
+<?php $this->titre = "CarRental - Ajouter une voiture" . (isset($voiture['titre']) ? $voiture['titre'] : ''); ?>
 
 <header>
     <h1 id="titreReponses">Ajouter une voiture de l'utilisateur 1 :</h1>

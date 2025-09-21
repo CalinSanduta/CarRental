@@ -29,14 +29,21 @@ class Avis extends Modele {
 
 // Supprime un avis
     public function deleteAvis($id) {
-        $sql = 'DELETE FROM avis'
-                . ' WHERE id = ?';
+        // Suppression définitive de l'avis (la table n'a pas de colonne 'efface')
+        $sql = 'DELETE FROM avis WHERE id = ?';
         $result = $this->executerRequete($sql, [$id]);
         return $result;
     }
 
 // Ajoute un avis associés à un voiture
     public function setAvis($avis) {
+        // Vérifier que l'utilisateur référencé existe (contrainte FK)
+        $sql = 'SELECT id FROM utilisateurs WHERE id = ?';
+        $stmt = $this->executerRequete($sql, [$avis['utilisateur_id']]);
+        if ($stmt->rowCount() != 1) {
+            throw new Exception("Utilisateur '" . intval($avis['utilisateur_id']) . "' invalide");
+        }
+
         $sql = 'INSERT INTO avis (voiture_id, utilisateur_id, date, commentaire) VALUES(?, ?, CURDATE(), ?)';
         $result = $this->executerRequete($sql, [$avis['voiture_id'], $avis['utilisateur_id'], $avis['commentaire']]);
         return $result;
