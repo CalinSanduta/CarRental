@@ -1,6 +1,5 @@
 <?php
 
-require_once 'Framework/Controleur.php';
 require_once 'Modele/Avis.php';
 require_once 'Framework/Vue.php';
 
@@ -12,49 +11,65 @@ class ControleurAvis extends Controleur {
         $this->avis = new Avis();
     }
 
+// L'action index n'est pas utilisée mais pourrait ressembler à ceci 
+// en ajoutant la fonctionnalité de faire afficher tous les avis
     public function index() {
-        // Redirection vers la page d'accueil (liste des voitures)
-        header('Location: index.php');
-        exit;
+        $avis = $this->avis->getAvis();
+        $this->genererVue(['avis' => $avis]);
     }
 
-    // Ajoute un avis à une voiture
-    public function avis($donnees) {
-        // Valider les champs réellement envoyés par le formulaire
-        if (!empty($donnees['voiture_id']) && !empty($donnees['utilisateur_id']) && trim($donnees['commentaire']) !== '') {
-            try {
-                $this->avis->setAvis($donnees);
-                header('Location: index.php?action=voiture&id=' . intval($donnees['voiture_id']));
-                exit;
-            } catch (Exception $e) {
-                // Rediriger vers la page voiture avec une erreur lisible
-                $msg = urlencode($e->getMessage());
-                header('Location: index.php?action=voiture&id=' . intval($donnees['voiture_id']) . '&erreur=' . $msg);
-                exit;
+// Ajoute un avis à une voiture
+    public function ajouter() {
+        $avis['voiture_id'] = $this->requete->getParametreId("voiture_id");
+        $avis['auteur'] = $this->requete->getParametre('auteur');
+        $validation_courriel = filter_var($avis['auteur'], FILTER_VALIDATE_EMAIL);
+        if ($validation_courriel) {
+            // Éliminer un code d'erreur éventuel
+            if ($this->requete->getSession()->existeAttribut('erreur')) {
+                $this->requete->getsession()->setAttribut('erreur', '');
             }
+            $avis['titre'] = $this->requete->getParametre('titre');
+            $avis['texte'] = $this->requete->getParametre('texte');
+            // Ajuster la valeur de la case à cocher
+            $avis['prive'] = $this->requete->existeParametre('prive') ? 1 : 0;
+            // Ajouter le avis à l'aide du modèle
+            $this->avis->setAvis($avis);
         } else {
-            header('Location: index.php?action=voiture&id=' . intval($donnees['voiture_id'] ?? 0) . '&erreur=champs');
-            exit;
+            //Recharger la page avec une erreur près du courriel
+            $this->requete->getSession()->setAttribut('erreur', 'courriel');
         }
+        //Recharger la page pour mettre à jour la liste des avis associés ou afficher une erreur
+        $this->rediriger('Voitures', 'lire/' . $avis['voiture_id']);
     }
 
-    // Confirmer la suppression d'un avis
-    public function confirmer($id) {
-        // Lire l'avis à l'aide du modèle (un seul enregistrement)
-        $avis = $this->avis->getUnAvis($id);
-        $vue = new Vue("Confirmer");
-        $vue->generer(array('avis' => $avis));
+// Confirmer la suppression d'un avis
+    public function confirmer() {
+        $id = $this->requete->getParametreId("id");
+        // Lire le avis à l'aide du modèle
+        $avis = $this->avis->getAvis($id);
+        $this->genererVue(['avis' => $avis]);
     }
 
-    // Supprimer un avis
-    public function supprimer($id) {
-        // Lire l'avis afin d'obtenir le id de la voiture associé
-        $avis = $this->avis->getUnAvis($id);
+// Supprimer un avis
+    public function supprimer() {
+        $id = $this->requete->getParametreId("id");
+        // Lire le avis afin d'obtenir le id de la voiture associé
+        $avis = $this->avis->getAvis($id);
         // Supprimer le avis à l'aide du modèle
         $this->avis->deleteAvis($id);
-        // Recharger la page pour mettre à jour la liste des avis associés
-        header('Location: index.php?action=voiture&id=' . intval($avis['voiture_id']));
-        exit;
+        //Recharger la page pour mettre à jour la liste des avis associés
+        $this->rediriger('Voitures', 'voitures/' . $avis['voitures_id']);
+    }
+
+    // Rétablir un avis
+    public function retablir() {
+        $id = $this->requete->getParametreId("id");
+        // Lire le avis afin d'obtenir le id de la voiture associé
+        $avis = $this->avis->getAvis($id);
+        // Supprimer le avis à l'aide du modèle
+        $this->avis->restoreAvis($id);
+        //Recharger la page pour mettre à jour la liste des avis associés
+        $this->rediriger('Voitures', 'voiture/' . $avis['voiture_id']);
     }
 
 }
