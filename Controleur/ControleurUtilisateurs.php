@@ -22,24 +22,30 @@ class ControleurUtilisateurs extends Controleur {
     }
 
     public function connecter() {
-        if ($this->requete->existeParametre("login") && $this->requete->existeParametre("mdp")) {
-            $login = $this->requete->getParametre("login");
-            $mdp = $this->requete->getParametre("mdp");
-            if ($this->utilisateur->connecter($login, $mdp)) {
-                $utilisateur = $this->utilisateur->getUtilisateur($login, $mdp);
-                $this->requete->getSession()->setAttribut("utilisateur", $utilisateur);
-                // Éliminer un code d'erreur éventuel
-                if ($this->requete->getSession()->existeAttribut('erreur')) {
-                    $this->requete->getsession()->setAttribut('erreur', '');
-                }
-                $this->rediriger("AdminVoitures");
-            } else {
-                $this->requete->getSession()->setAttribut('erreur', 'mdp');
-                $this->rediriger('Utilisateurs');
+    // On vérifie que les deux champs attendus sont présents
+    if ($this->requete->existeParametre('email') && $this->requete->existeParametre('mot_de_passe')) {
+        $email = $this->requete->getParametre('email');
+        $mdp   = $this->requete->getParametre('mot_de_passe');
+
+        // Récupérer l'utilisateur (ou false si introuvable)
+        $utilisateur = $this->utilisateur->getUtilisateurParIdentifiants($email, $mdp);
+
+        if ($utilisateur) {
+            // Sauvegarde en session
+            $this->requete->getSession()->setAttribut('utilisateur', $utilisateur);
+            if ($this->requete->getSession()->existeAttribut('erreur')) {
+                $this->requete->getSession()->setAttribut('erreur', '');
             }
-        } else
-            throw new Exception("Action impossible : login ou mot de passe non défini");
+            $this->rediriger('AdminVoitures');
+        } else {
+            $this->requete->getSession()->setAttribut('erreur', 'mdp');
+            $this->rediriger('Utilisateurs');
+        }
+    } else {
+        throw new Exception("Action impossible : email ou mot de passe non défini");
     }
+    }
+
 
     public function deconnecter() {
         $this->requete->getSession()->detruire();

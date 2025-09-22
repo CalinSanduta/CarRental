@@ -6,7 +6,7 @@
     </header>
     <p><strong>Date :</strong> <?= htmlspecialchars($avis['date']) ?><br />
        <strong>Utilisateur # :</strong> <?= htmlspecialchars($avis['utilisateur_id']) ?></p>
-    <p><?= nl2br(htmlspecialchars($avis['commentaire'])) ?></p>
+    <p><?= nl2br(htmlspecialchars($avis['avis'])) ?></p>
 
     <form action="index.php?action=supprimer" method="post">
         <input type="hidden" name="id" value="<?= intval($avis['id']) ?>" />

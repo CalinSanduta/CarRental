@@ -31,16 +31,13 @@ class Utilisateur extends Modele {
      * @return mixed L'utilisateur
      * @throws Exception Si aucun utilisateur ne correspond aux paramètres
      */
-    public function getUtilisateur($login, $mdp)
-    {
-        $sql = "select id, nom, identifiant, mot_de_passe 
-            from utilisateurs where identifiant = ? and mot_de_passe = ?";
-        $utilisateur = $this->executerRequete($sql, array($login, $mdp));
-        if ($utilisateur->rowCount() == 1)
-            return $utilisateur->fetch();  // Accès à la première ligne de résultat
-        else
-            throw new Exception("Aucun utilisateur ne correspond aux identifiants fournis");
-    }
+    
+    public function getUtilisateurParIdentifiants(string $email, string $mdp) {
+    $sql = 'SELECT * FROM utilisateurs WHERE email = ? AND mot_de_passe = ?';
+    $stmt = $this->executerRequete($sql, [$email, $mdp]);
+    return $stmt->fetch(); // false si aucun utilisateur
+}
+
 
 }
 

@@ -14,12 +14,10 @@ class ControleurAdminVoitures extends ControleurAdmin {
         $this->avis = new Avis();
     }
 
-// Affiche la liste de tous les voitures du blog
     public function index() {
         $voitures = $this->voiture->getVoitures()->fetchAll(PDO::FETCH_ASSOC);
         $this->genererVue(['voitures' => $voitures]);
     }
-
 // Affiche les détails sur une voiture
     public function lire() {
         $idVoiture = $this->requete->getParametreId("id");
@@ -52,7 +50,7 @@ class ControleurAdminVoitures extends ControleurAdmin {
     }
 
 // Enregistre la voiture modifiée et retourne à la liste des voitures
-    public function miseAJour() {
+    public function miseAJourVoiture() {
         $voiture['id'] = $this->requete->getParametreId('id');
         $voiture['modele'] = $this->requete->getParametre('modele');
         $voiture['annee'] = $this->requete->getParametre('annee');
