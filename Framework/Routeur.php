@@ -1,121 +1,99 @@
 <?php
 
-require_once 'Controleur/ControleurVoiture.php';
-require_once 'Controleur/ControleurAvis.php'; 
-// require_once 'Controleur/ControleurType.php';
-require_once 'Framework/Vue.php';
-require_once 'Framework/Requete.php';
+require_once 'Configuration.php';
+require_once 'Controleur.php';
+require_once 'Requete.php';
+require_once 'Vue.php';
+
+/*
+ * Classe de routage des requêtes entrantes.
+ * 
+ * Inspirée du framework PHP de Nathan Davison
+ * (https://github.com/ndavison/Nathan-MVC)
+ * 
+ * @version 1.0
+ * @author Baptiste Pesquet
+ */
 
 class Routeur {
 
-    private $ctrlVoiture;
-    private $ctrlAvis;
-    // private $ctrlType;
-
-    public function __construct() {
-        $this->ctrlVoiture = new ControleurVoiture();
-        $this->ctrlAvis = new ControleurAvis(); 
-        // Créer la requête et l'affecter aux contrôleurs qui en ont besoin
-        $requete = new Requete(array_merge($_GET, $_POST));
-        if (method_exists($this->ctrlVoiture, 'setRequete')) {
-            $this->ctrlVoiture->setRequete($requete);
-        }
-        if (method_exists($this->ctrlAvis, 'setRequete')) {
-            $this->ctrlAvis->setRequete($requete);
-        }
-        // $this->ctrlType = new ControleurType();
-    }
-    
-    // Route une requête entrante : exécution l'action associée
+    /**
+     * Méthode principale appelée par le contrôleur frontal
+     * Examine la requête et exécute l'action appropriée
+     */
     public function routerRequete() {
         try {
-            if (isset($_GET['action'])) {
-                // À propos
-                if ($_GET['action'] == 'apropos') {
-                    $this->apropos();
-                } else if ($_GET['action'] == 'voiture') {
-                    $id = intval($this->getParametre($_GET, 'id'));
-                    if ($id != 0) {
-                        $erreur = isset($_GET['erreur']) ? $_GET['erreur'] : '';
-                        $this->ctrlVoiture->voiture($id, $erreur);
-                    } else
-                        throw new Exception("Identifiant d'une voiture non valide");
-                } else if ($_GET['action'] == 'avis') {
-                    // Tester l'existence des paramètres requis
-                    $voiture_id = intval($this->getParametre($_POST, 'voiture_id'));
-                    if ($voiture_id != 0) {
-                        $this->getParametre($_POST, 'utilisateur_id');
-                        $this->getParametre($_POST, 'commentaire');
-                        $this->ctrlAvis->avis($_POST);
-                    } else
-                        throw new Exception("Identifiant d'une voiture non valide");
-                } else if ($_GET['action'] == 'confirmer') {
-                    $id = intval($this->getParametre($_GET, 'id'));
-                    if ($id != 0) {
-                        $this->ctrlAvis->confirmer($id);
-                    } else
-                        throw new Exception("Identifiant de avis non valide");
-                } else if ($_GET['action'] == 'supprimer') {
-                    $id = intval($this->getParametre($_POST, 'id'));
-                    if ($id != 0) {
-                        $this->ctrlAvis->supprimer($id);
-                    } else
-                        throw new Exception("Identifiant de avis non valide");
-                } else if ($_GET['action'] == 'nouvelVoiture') {
-                    $this->ctrlVoiture->nouvelVoiture();
-                } else if ($_GET['action'] == 'ajouter') {
-                    $this->getParametre($_POST, 'modele');
-                    $this->getParametre($_POST, 'annee');
-                    $this->getParametre($_POST, 'description');
-                    $this->getParametre($_POST, 'prix_jour');
-                    $this->ctrlVoiture->ajouter($_POST);
+            // Fusion des paramètres GET et POST de la requête
+            // Permet de gérer uniformément ces deux types de requête HTTP
+            $requete = new Requete(array_merge($_GET, $_POST));
 
-                } else if ($_GET['action'] == 'miseAJourVoiture') {
-                    $id = intval($this->getParametre($_POST, 'id'));
-                    if ($id != 0) {
-                        $this->getParametre($_POST, 'modele');
-                        $this->getParametre($_POST, 'annee');
-                        $this->getParametre($_POST, 'description');
-                        $this->getParametre($_POST, 'prix_jour');
-                        $this->ctrlVoiture->miseAJourVoiture($_POST);
-                    } else
-                        throw new Exception("Identifiant de voiture non valide");
-                } else if ($_GET['action'] == 'modifierVoiture') {
-                    $id = intval($this->getParametre($_GET, 'id'));
-                    if ($id != 0) {
-                        $this->ctrlVoiture->modifierVoiture($id);
-                    } else
-                        throw new Exception("Identifiant de voiture non valide");
+            $controleur = $this->creerControleur($requete);
+            $action = $this->creerAction($requete);
 
-                } else {
-                    throw new Exception("Action non valide");
-                }
-            } else {
-                $this->ctrlVoiture->voitures();
-            }
+            $controleur->executerAction($action);
         } catch (Exception $e) {
-            $this->erreur($e->getMessage());
+            $this->gererErreur($e);
         }
     }
 
-    // Affiche une explication de l'application
-    private function apropos() {
-        $vue = new Vue("Apropos");
-        $vue->generer();
+    /**
+     * Instancie le contrôleur approprié en fonction de la requête reçue
+     * 
+     * @param Requete $requete Requête reçue
+     * @return Instance d'un contrôleur
+     * @throws Exception Si la création du contrôleur échoue
+     */
+    private function creerControleur(Requete $requete) {
+        // Grâce à la redirection, toutes les URL entrantes sont du type :
+        // index.php?controleur=XXX&action=YYY&id=ZZZ
+        $ctrlAccueil = Configuration::get("defaut");
+        if ($requete->getSession()->existeAttribut("utilisateur")) {
+            $ctrlAccueil = 'Admin' . $ctrlAccueil;
+        }
+        $controleur = $ctrlAccueil;  // Contrôleur par défaut
+        if ($requete->existeParametre('controleur')) {
+            $controleur = $requete->getParametre('controleur');
+            // Première lettre en majuscules
+            $controleur = ucfirst(strtolower($controleur));
+        }
+        // Création du nom du fichier du contrôleur
+        // La convention de nommage des fichiers controleurs est : Controleur/Controleur<$controleur>.php
+        $classeControleur = "Controleur" . $controleur;
+        $fichierControleur = "Controleur/" . $classeControleur . ".php";
+        if (file_exists($fichierControleur)) {
+            // Instanciation du contrôleur adapté à la requête
+            require($fichierControleur);
+            $controleur = new $classeControleur();
+            $controleur->setRequete($requete);
+            return $controleur;
+        } else {
+            throw new Exception("Fichier '$fichierControleur' introuvable");
+        }
     }
 
-    // Affiche une erreur
-    private function erreur($msgErreur) {
-        $vue = new Vue("Erreur");
-        $vue->generer(array('msgErreur' => $msgErreur));
+    /**
+     * Détermine l'action à exécuter en fonction de la requête reçue
+     * 
+     * @param Requete $requete Requête reçue
+     * @return string Action à exécuter
+     */
+    private function creerAction(Requete $requete) {
+        $action = "index";  // Action par défaut
+        if ($requete->existeParametre('action')) {
+            $action = $requete->getParametre('action');
+        }
+        return $action;
     }
 
-    // Recherche un paramètre dans un tableau
-    private function getParametre($tableau, $nom) {
-        if (isset($tableau[$nom])) {
-            return $tableau[$nom];
-        } else
-            throw new Exception("Paramètre '$nom' absent");
+    /**
+     * Gère une erreur d'exécution (exception)
+     * 
+     * @param Exception $exception Exception qui s'est produite
+     */
+    private function gererErreur(Exception $exception) {
+        $vue = new Vue('erreur');
+        $erreur = $exception->getMessage();
+        $vue->generer(array('msgErreur' => $erreur));
     }
 
 }

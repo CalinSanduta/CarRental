@@ -28,10 +28,8 @@ class ControleurAvis extends Controleur {
             if ($this->requete->getSession()->existeAttribut('erreur')) {
                 $this->requete->getsession()->setAttribut('erreur', '');
             }
-            $avis['titre'] = $this->requete->getParametre('titre');
-            $avis['texte'] = $this->requete->getParametre('texte');
-            // Ajuster la valeur de la case à cocher
-            $avis['prive'] = $this->requete->existeParametre('prive') ? 1 : 0;
+            $avis['utilisateur_id'] = $this->requete->getParametreId('utilisateur_id');
+            $avis['avis'] = $this->requete->getParametre('avis');
             // Ajouter le avis à l'aide du modèle
             $this->avis->setAvis($avis);
         } else {
@@ -46,7 +44,7 @@ class ControleurAvis extends Controleur {
     public function confirmer() {
         $id = $this->requete->getParametreId("id");
         // Lire le avis à l'aide du modèle
-        $avis = $this->avis->getAvis($id);
+        $avis = $this->avis->getUnAvis($id);
         $this->genererVue(['avis' => $avis]);
     }
 
@@ -54,7 +52,7 @@ class ControleurAvis extends Controleur {
     public function supprimer() {
         $id = $this->requete->getParametreId("id");
         // Lire le avis afin d'obtenir le id de la voiture associé
-        $avis = $this->avis->getAvis($id);
+        $avis = $this->avis->getUnAvis($id);
         // Supprimer le avis à l'aide du modèle
         $this->avis->deleteAvis($id);
         //Recharger la page pour mettre à jour la liste des avis associés

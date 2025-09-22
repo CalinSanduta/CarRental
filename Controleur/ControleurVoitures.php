@@ -1,7 +1,7 @@
 <?php
 
 require_once 'Framework/Controleur.php';
-require_once 'Modele/Voitures.php';
+require_once 'Modele/Voiture.php';
 require_once 'Modele/Avis.php';
 
 class ControleurVoitures extends Controleur {
@@ -28,5 +28,5 @@ class ControleurVoitures extends Controleur {
         $avis = $this->avis->getAvis($idVoiture);
         $this->genererVue(['voiture' => $voiture, 'avis' => $avis, 'erreur' => $erreur]);
     }
-
 }
+

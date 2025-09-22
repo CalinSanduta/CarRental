@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Hôte : localhost
--- Généré le :  mar. 09 sep. 2025 à 14:52
+-- Généré le :  lun. 22 sep. 2025 à 05:46
 -- Version du serveur :  8.0.18
 -- Version de PHP :  7.3.11
 
@@ -33,7 +33,8 @@ CREATE TABLE `avis` (
   `voiture_id` int(11) NOT NULL,
   `utilisateur_id` int(11) NOT NULL,
   `date` date NOT NULL,
-  `commentaire` text COLLATE utf8mb4_general_ci NOT NULL
+  `commentaire` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
+  `efface` tinyint(4) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -46,7 +47,7 @@ CREATE TABLE `utilisateurs` (
   `id` int(11) NOT NULL,
   `prenom` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `email` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
-  `mot_de_passe` varchar(255) COLLATE utf8mb4_general_ci NOT NULL
+  `mot_de_passe` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
@@ -56,12 +57,23 @@ CREATE TABLE `utilisateurs` (
 --
 
 CREATE TABLE `voitures` (
-  `modele` varchar(255) COLLATE utf8mb4_general_ci NOT NULL,
+  `modele` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `annee` year(4) NOT NULL,
-  `description` text COLLATE utf8mb4_general_ci NOT NULL,
+  `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   `prix_jour` float NOT NULL,
   `id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Déchargement des données de la table `voitures`
+--
+
+INSERT INTO `voitures` (`modele`, `annee`, `description`, `prix_jour`, `id`) VALUES
+('Toyota Corolla', 2020, 'Voiture compacte, fiable et économique.', 45, 1),
+('Honda Civic', 2021, 'Berline populaire avec faible consommation.', 50, 2),
+('Ford Mustang', 2019, 'Voiture sportive avec moteur puissant.', 120, 3),
+('Tesla Model 3', 2022, 'Électrique, moderne et écologique.', 150, 4),
+('BMW X5', 2021, 'VUS de luxe avec grand confort.', 200, 5)
 
 --
 -- Index pour les tables déchargées
@@ -107,7 +119,7 @@ ALTER TABLE `utilisateurs`
 -- AUTO_INCREMENT pour la table `voitures`
 --
 ALTER TABLE `voitures`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Contraintes pour les tables déchargées
