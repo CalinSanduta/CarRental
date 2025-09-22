@@ -2,24 +2,20 @@
 
 require_once 'Framework/Vue.php';
 $voitures = [
-    [
-        'id' => '991',
-        'titre' => 'titre Test 1',
-        'sous_titre' => 'sous-titre Test 1',
-        'utilisateur_id' => '111',
-        'date' => '2017-12-31',
-        'texte' => 'texte Test 1',
-        'type' => 'type Test 1'
+   [
+        'id'         => 1,
+        'modele'     => 'Toyota Corolla',
+        'annee'      => 2020,
+        'description'=> 'Compacte fiable, idéale en ville.',
+        'prix_jour'  => 45.0
     ],
     [
-        'id' => '992',
-        'titre' => 'titre Test 2',
-        'sous_titre' => 'sous-titre Test 2',
-        'utilisateur_id' => '111',
-        'date' => '2017-12-31',
-        'texte' => 'texte Test 2',
-        'type' => 'type Test 2'
-    ]
+        'id'         => 2,
+        'modele'     => 'Honda Civic',
+        'annee'      => 2019,
+        'description'=> 'Économique, bon confort.',
+        'prix_jour'  => 50.0
+    ],
 ];
 $vue = new Vue('index', 'Voitures');
 $vue->generer(['voitures' => $voitures]);

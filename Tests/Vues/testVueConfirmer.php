@@ -2,14 +2,13 @@
 
 require_once 'Framework/Vue.php';
 $avis = [
-        'id' => '999',
-        'article_id' => '111',
-        'date' => '2017-12-31',
-        'auteur' => 'auteur Test',
-        'prive' => '1',
-        'titre' => 'titre Test',
-        'texte' => 'texte Test',
+    'id'             => 999,
+    'voiture_id'     => 111,
+    'utilisateur_id' => 7,
+    'date'           => '2025-09-21',
+    'commentaire'    => 'Très bonne voiture, propre et économique.',
+    'efface'         => 0,
     ];
-$vue = new Vue('Confirmer', 'Avis');
+$vue = new Vue('confirmer', 'AdminAvis');
 $vue->generer(['avis' => $avis]);
 
