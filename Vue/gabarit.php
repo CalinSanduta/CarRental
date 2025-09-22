@@ -35,7 +35,7 @@
                 <?= $contenu ?>   <!-- Élément spécifique -->
             </div> <!-- #contenu -->
             <footer id="piedBlog">
-                Blog réalisé avec PHP, HTML5 et CSS.
+                Blog réalisé par Calin, Badr et Dylan.
             </footer>
         </div> <!-- #global -->
         <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
